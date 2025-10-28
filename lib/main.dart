@@ -30,6 +30,8 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _passwordConfirmationController =
       TextEditingController();
+  final TextEditingController _avatarController = TextEditingController();
+  final List<String> _avatars = ['😊', '🚀', '🐱', '🍰', '🌙'];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,6 +123,36 @@ class _SignupPageState extends State<SignupPage> {
                 },
               ),
               const SizedBox(height: 24),
+              // Avatar Selection
+              Wrap(
+                spacing: 12,
+                children: _avatars.map((emoji) {
+                  final isSelected = _avatarController.text == emoji;
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _avatarController.text = emoji;
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isSelected
+                            ? Colors.purple.withOpacity(0.2)
+                            : Colors.grey.shade200,
+                        border: Border.all(
+                          color: isSelected
+                              ? Colors.purple
+                              : Colors.transparent,
+                          width: 2,
+                        ),
+                      ),
+                      child: Text(emoji, style: const TextStyle(fontSize: 28)),
+                    ),
+                  );
+                }).toList(),
+              ),
               // Sign Up Button
               ElevatedButton(
                 onPressed: () {
@@ -129,7 +161,10 @@ class _SignupPageState extends State<SignupPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => WelcomeScreen(name: name),
+                        builder: (context) => WelcomeScreen(
+                          name: name,
+                          avatar: _avatarController.text,
+                        ),
                       ),
                     );
                   }
